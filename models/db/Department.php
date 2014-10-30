@@ -32,6 +32,7 @@ class Department extends \yii\db\ActiveRecord
         return [
             [['id', 'name', 'faculty_id'], 'required'],
             [['id'], 'string', 'max' => 2],
+            [['id'],'unique'],
             [['name'], 'string', 'max' => 50],
             [['faculty_id'], 'string', 'max' => 5]
         ];
@@ -43,9 +44,9 @@ class Department extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'faculty_id' => 'Faculty ID',
+            'id' => 'Kode',
+            'name' => 'Nama',
+            'faculty_id' => 'Fakultas',
         ];
     }
 

@@ -9,7 +9,7 @@ use yii\widgets\Breadcrumbs;
     <div class="row">
         <div class="col-md-3 sidebar">
             <?php if (isset(Yii::$app->user->identity)):?>
-            <h1><?=Yii::$app->user->identity->fullname;?></h1>
+            <h3><?=Yii::$app->user->identity->fullname;?></h3>
             <?= Nav::widget([
                     'options' => ['class' => 'nav nav-sidebar'],
                     'items' => [

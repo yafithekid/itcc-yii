@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\db\Department;
+use app\models\db\Faculty;
 use yii\filters\AccessControl;
 use app\models\search\Department as DepartmentSearch;
 use yii\web\Controller;
@@ -89,6 +90,7 @@ class DepartmentController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'faculties' => Faculty::find()->all(),
             ]);
         }
     }
@@ -108,6 +110,7 @@ class DepartmentController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'faculties' => Faculty::find()->all(),
             ]);
         }
     }
