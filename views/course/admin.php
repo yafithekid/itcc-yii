@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\search\UserSearch */
+/* @var $searchModel app\models\search\CourseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Daftar Pengguna';
+$this->title = 'Kuliah';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-index">
+<div class="course-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Tambah pengguna', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Tambah Kuliah', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -24,15 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'username',
-            'email:email',
-            'fullname',
-            // 'school',
-            // 'is_admin',
-            // 'is_teacher',
-            // 'last_login',
-            // 'is_online',
+            'name',
+            // 'description:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

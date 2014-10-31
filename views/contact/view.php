@@ -4,18 +4,16 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\db\Department */
+/* @var $model app\models\db\Contact */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Departments', 'url' => ['index']];
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Contacts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="department-view">
+<div class="contact-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    
-    <?php if (!Yii::$app->user->isGuest && (Yii::$app->user->identity->isAdmin())): ?>
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
@@ -26,10 +24,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-    <?php endif; ?>
 
-    <h4>Kuliah yang tersedia: </h4>
-    <?php foreach($model->courses as $course) : ?>
-    <?= Html::a($course->name,['course/view','id'=>$course->id]); ?>
-    <?php endforeach; ?>
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'id',
+            'user_id',
+            'contact_user_id',
+        ],
+    ]) ?>
+
 </div>

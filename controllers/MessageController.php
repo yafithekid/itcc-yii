@@ -3,21 +3,20 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\db\User;
-use yii\filters\AccessControl;
-use app\models\search\UserSearch;
+use app\models\db\Message;
+use app\models\form\MessageForm;
+use app\models\db\MessageSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * MessageController implements the CRUD actions for Message model.
  */
-class UserController extends Controller
+class MessageController extends Controller
 {
 
-    public $layout = '@app/views/layouts/sidebar.php';
-
+public $layout = '@app/views/layouts/sidebar';
     public function behaviors()
     {
         return [
@@ -27,41 +26,28 @@ class UserController extends Controller
                     'delete' => ['post'],
                 ],
             ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function($rule,$action){
-                            if (isset(Yii::$app->user->identity))
-                                return Yii::$app->user->identity->isAdmin();
-                            else
-                                return false;
-                        }
-                    ],
-                ],
-            ]
         ];
     }
 
     /**
-     * Lists all User models.
+     * Lists all Message models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new MessageSearch();
+        $dataProvider = $searchModel->searchCurrentUser(Yii::$app->request->queryParams);
 
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+             'dataProvider' => $dataProvider,
+            //'messages' => $messages,
         ]);
     }
 
     /**
-     * Displays a single User model.
+     * Displays a single Message model.
      * @param integer $id
      * @return mixed
      */
@@ -73,29 +59,27 @@ class UserController extends Controller
     }
 
     /**
-     * Creates a new User model.
+     * Creates a new Message model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new User();
-
-        if ($model->load(Yii::$app->request->post()) ) {
-            $model->password = sha1($model->password);
-            $model->save();
-
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            $model->password = '';
-            return $this->render('create', [
+        $model = new MessageForm();
+        if ($model->load(Yii::$app->request->post())) {
+            var_dump($model->attributes);
+            if ($model->contact()){
+                return $this->redirect(['index']);
+            }
+            
+        }
+        return $this->render('create', [
                 'model' => $model,
             ]);
-        }
     }
 
     /**
-     * Updates an existing User model.
+     * Updates an existing Message model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -104,12 +88,9 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->password = sha1($model->password);
-            $model->save();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            $model->password = '';
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -117,7 +98,7 @@ class UserController extends Controller
     }
 
     /**
-     * Deletes an existing User model.
+     * Deletes an existing Message model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -130,15 +111,15 @@ class UserController extends Controller
     }
 
     /**
-     * Finds the User model based on its primary key value.
+     * Finds the Message model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return User the loaded model
+     * @return Message the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = Message::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -7,28 +7,24 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\search\CourseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Courses';
+$this->title = 'Kategori Kuliah';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="course-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isTeacher()): ?>
     <p>
-        <?= Html::a('Create Course', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Tambah Kuliah', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php endif; ?>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'name',
-            // 'description:ntext',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+    <?php foreach($list_fakultas as $fakultas): ?>
+        <?="<h4>$fakultas->name</h4>"; ?>
+        <?php foreach($fakultas->departments as $jurusan): ?>
+            <?= "<b>".Html::a($jurusan->name,['/department/view','id'=>$jurusan->id])."</b><br>"; ?>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
 
 </div>

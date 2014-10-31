@@ -4,12 +4,14 @@ namespace app\controllers;
 
 use Yii;
 use app\models\db\Course;
+use app\models\db\Department;
 use app\models\search\CourseSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
+use app\models\db\Faculty;
 /**
  * CourseController implements the CRUD actions for Course model.
  */
@@ -25,15 +27,37 @@ class CourseController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
+                        'actions' => ['admin','update','create','delete'],
                         'roles' => ['@'],
                     ],
                     [
+                        'allow' => true,
+                        'actions' => ['index','view'],
+                        'roles' => ['?','@'],
+                    ],
+                    [   
+                        //deny other request
                         'allow' => false,
-                        'roles' => ['?'],
+                        'roles' => ['@','?']
                     ],
                 ],
             ],
         ];
+    }
+
+    /**
+     * Lists all Course models.
+     * @return mixed
+     */
+    public function actionAdmin()
+    {
+        $searchModel = new CourseSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('admin', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -48,6 +72,10 @@ class CourseController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'list_fakultas' => 
+                Faculty::find()
+                    ->with(['departments'])
+                    ->all()
         ]);
     }
 
@@ -71,12 +99,14 @@ class CourseController extends Controller
     public function actionCreate()
     {
         $model = new Course();
+        $list_jurusan = Department::find()->with('faculty')->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'list_jurusan' => $list_jurusan,
             ]);
         }
     }
@@ -90,12 +120,14 @@ class CourseController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $list_jurusan = Department::find()->with('faculty')->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'list_jurusan' => $list_jurusan,
             ]);
         }
     }

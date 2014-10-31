@@ -1,16 +1,16 @@
 <?php
 
-namespace app\models\search;
+namespace app\models\db;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\db\Faculty as FacultyModel;
+use app\models\db\Contact;
 
 /**
- * Faculty represents the model behind the search form about `app\models\db\Faculty`.
+ * ContactSearch represents the model behind the search form about `app\models\db\Contact`.
  */
-class Faculty extends FacultyModel
+class ContactSearch extends Contact
 {
     /**
      * @inheritdoc
@@ -18,7 +18,7 @@ class Faculty extends FacultyModel
     public function rules()
     {
         return [
-            [['id', 'name'], 'safe'],
+            [['id', 'user_id', 'contact_user_id'], 'integer'],
         ];
     }
 
@@ -40,7 +40,7 @@ class Faculty extends FacultyModel
      */
     public function search($params)
     {
-        $query = FacultyModel::find();
+        $query = Contact::find()->with('contactUsers');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -50,11 +50,12 @@ class Faculty extends FacultyModel
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'user_id' => $this->user_id,
+            'contact_user_id' => $this->contact_user_id,
+        ]);
 
         return $dataProvider;
     }
-
-    
 }

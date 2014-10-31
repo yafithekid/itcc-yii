@@ -3,23 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\db\Department;
-use app\models\db\Faculty;
-use app\models\db\Course;
-
-use yii\filters\AccessControl;
-use app\models\search\Department as DepartmentSearch;
+use app\models\db\Contact;
+use app\models\db\ContactSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * DepartmentController implements the CRUD actions for Department model.
+ * ContactController implements the CRUD actions for Contact model.
  */
-class DepartmentController extends Controller
+class ContactController extends Controller
 {
-    public $layout = '@app/views/layouts/sidebar';
-
+    public $layout = '@app/views/layouts/sidebar.php';
     public function behaviors()
     {
         return [
@@ -29,36 +24,16 @@ class DepartmentController extends Controller
                     'delete' => ['post'],
                 ],
             ],
-            'login' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function($rule,$action){
-                            if (isset(Yii::$app->user->identity))
-                                return Yii::$app->user->identity->isAdmin();
-                            else
-                                return false;
-                        }
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['view'],
-                        'roles' => ['@','?'],
-                    ],
-                ],
-            ]
         ];
     }
 
     /**
-     * Lists all Department models.
+     * Lists all Contact models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new DepartmentSearch();
+        $searchModel = new ContactSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -68,40 +43,39 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Displays a single Department model.
-     * @param string $id
+     * Displays a single Contact model.
+     * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => Department::find()->with('courses')->where(['id'=>$id])->one(),
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Department model.
+     * Creates a new Contact model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Department();
+        $model = new Contact();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'faculties' => Faculty::find()->all(),
             ]);
         }
     }
 
     /**
-     * Updates an existing Department model.
+     * Updates an existing Contact model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionUpdate($id)
@@ -113,15 +87,14 @@ class DepartmentController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'faculties' => Faculty::find()->all(),
             ]);
         }
     }
 
     /**
-     * Deletes an existing Department model.
+     * Deletes an existing Contact model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
@@ -132,15 +105,15 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Finds the Department model based on its primary key value.
+     * Finds the Contact model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Department the loaded model
+     * @param integer $id
+     * @return Contact the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Department::findOne($id)) !== null) {
+        if (($model = Contact::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

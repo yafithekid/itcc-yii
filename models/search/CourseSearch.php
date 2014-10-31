@@ -63,4 +63,15 @@ class CourseSearch extends Course
 
         return $dataProvider;
     }
+
+    public function searchAllDepartments()
+    {
+        $query = Course::find()->select('count(id)')
+            ->with(['department','faculty'])
+            ->groupBy('departement_id');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+    }
 }

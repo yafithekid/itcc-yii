@@ -21,14 +21,13 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'fullname')->textInput(['maxlength' => 127]) ?>
 
     <?= $form->field($model, 'school')->textInput(['maxlength' => 127]) ?>
+    <?php if (Yii::$app->user->identity->isAdmin()): ?>
+    <h3>Hak akses</h3>
 
-    <?= $form->field($model, 'is_admin')->textInput() ?>
+    <?= $form->field($model, 'is_admin')->checkBox() ?>
 
-    <?= $form->field($model, 'is_teacher')->textInput() ?>
-
-    <?= $form->field($model, 'last_login')->textInput() ?>
-
-    <?= $form->field($model, 'is_online')->textInput() ?>
+    <?= $form->field($model, 'is_teacher')->checkBox() ?>
+    <?php endif; ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

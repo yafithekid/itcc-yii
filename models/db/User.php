@@ -59,10 +59,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'email' => 'Email',
             'fullname' => 'Fullname',
             'school' => 'School',
-            'is_admin' => 'Is Admin',
-            'is_teacher' => 'Is Teacher',
-            'last_login' => 'Last Login',
-            'is_online' => 'Is Online',
+            'is_admin' => 'Admin',
+            'is_teacher' => 'Dosen',
+            'last_login' => 'Terakhir login',
+            'is_online' => 'Online',
         ];
     }
 
@@ -146,4 +146,5 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function isTeacher(){
         return $this->is_teacher == 1;
     }
+
 }

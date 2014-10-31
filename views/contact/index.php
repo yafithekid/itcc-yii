@@ -4,19 +4,17 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\search\UserSearch */
+/* @var $searchModel app\models\db\ContactSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Daftar Pengguna';
+$this->title = 'Contacts';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="contact-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?php echo $this->render('_list',['dataProvider'=>$dataProvider,'searchModel' => $searchModel]); ?>
     <p>
-        <?= Html::a('Tambah pengguna', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Contact', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,14 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'username',
-            'email:email',
-            'fullname',
-            // 'school',
-            // 'is_admin',
-            // 'is_teacher',
-            // 'last_login',
-            // 'is_online',
+            'id',
+            'user_id',
+            'contact_user_id',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

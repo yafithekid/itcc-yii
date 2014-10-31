@@ -55,7 +55,7 @@ class Department extends \yii\db\ActiveRecord
      */
     public function getCourses()
     {
-        return $this->hasMany(Courses::className(), ['department_id' => 'id']);
+        return $this->hasMany(Course::className(), ['department_id' => 'id']);
     }
 
     /**
@@ -63,6 +63,6 @@ class Department extends \yii\db\ActiveRecord
      */
     public function getFaculty()
     {
-        return $this->hasOne(Faculties::className(), ['id' => 'faculty_id']);
+        return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
     }
 }
