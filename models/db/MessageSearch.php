@@ -71,8 +71,8 @@ class MessageSearch extends Message
      */
     public function searchSent($params)
     {
-        $query = Message::find()->with(['contact' => function($query){
-            $query->andWhere(['user_id' => Yii::$app->user->identity->id]);
+        $query = Message::find()->joinWith(['contact' => function($query){
+            $query->andWhere("user_id = ".Yii::$app->user->identity->id);
         }]);
 
         $dataProvider = new ActiveDataProvider([
@@ -103,8 +103,8 @@ class MessageSearch extends Message
      */
     public function searchInbox($params)
     {
-        $query = Message::find()->with(['contact' => function($query){
-            $query->andWhere(['contact_user_id' => Yii::$app->user->identity->id]);
+        $query = Message::find()->joinWith(['contact' => function($query){
+            $query->andWhere("contact_user_id = ".Yii::$app->user->identity->id);
         }]);
 
         $dataProvider = new ActiveDataProvider([

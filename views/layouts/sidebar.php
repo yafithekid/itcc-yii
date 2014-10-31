@@ -19,7 +19,7 @@ $last_login_users = User::find()->where(['is_online'=>0])->orderBy(['last_login'
                     'options' => ['class' => 'nav nav-sidebar'],
                     'items' => [
                         ['label' => '<span class="glyphicon glyphicon-user"></span> Ubah Profil', 'url' => ['/user/update','id'=>Yii::$app->user->identity->id]],
-                        ['label' => '<span class="glyphicon glyphicon-envelope"></span> Pesan', 'url' => ['/message/index']],
+                        ['label' => '<span class="glyphicon glyphicon-envelope"></span> Pesan', 'url' => ['/message/inbox']],
                         ['label' => '<span class="glyphicon glyphicon-book"></span> Daftar Kuliah Tersedia', 'url' => ['/course/index']],
                         ['label' => '<span class="glyphicon glyphicon-pencil"></span> Tugas', 'url' => ['/task/student','id'=>Yii::$app->user->identity->id]],
                     ],
