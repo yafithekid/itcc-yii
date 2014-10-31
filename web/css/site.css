@@ -17,10 +17,9 @@ body {
 .footer {
     height: 60px;
     background-color: #f5f5f5;
-    border-top: 1px solid #ddd;
+    border-top: 3px solid #909090;
     padding-top: 20px;
 }
-
 .jumbotron {
     text-align: center;
     background-color: transparent;
