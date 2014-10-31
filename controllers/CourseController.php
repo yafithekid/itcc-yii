@@ -12,6 +12,8 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 use app\models\db\Faculty;
+use app\models\db\UserCourse;
+
 /**
  * CourseController implements the CRUD actions for Course model.
  */
@@ -27,7 +29,7 @@ class CourseController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['admin','update','create','delete'],
+                        'actions' => ['admin','update','create','delete','join','quit'],
                         'roles' => ['@'],
                     ],
                     [
@@ -86,8 +88,13 @@ class CourseController extends Controller
      */
     public function actionView($id)
     {
+        $user_course = UserCourse::find()
+        ->where(['user_id' => Yii::$app->user->identity->id,'course_id' => $id])
+        ->one();
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'joined' => ($user_course !== null)
         ]);
     }
 
@@ -109,6 +116,32 @@ class CourseController extends Controller
                 'list_jurusan' => $list_jurusan,
             ]);
         }
+    }
+
+    public function actionJoin($id){
+        $user_course = UserCourse::find()
+        ->where(['user_id' => Yii::$app->user->identity->id,'course_id' => $id])
+        ->one();
+        if ($user_course === null){
+            $user_course = new UserCourse;
+            $user_course->user_id = Yii::$app->user->identity->id;
+            $user_course->course_id = $id;
+            if(!$user_course->save()){
+                var_dump($user_course->getErrors());
+                exit();
+            }
+        }
+        return $this->redirect(['view','id'=>$id]);
+    }
+
+    public function actionQuit($id){
+        $user_course = UserCourse::find()
+        ->where(['user_id' => Yii::$app->user->identity->id,'course_id' => $id])
+        ->one();
+        if ($user_course !== null){
+            $user_course->delete();
+        }
+        return $this->redirect(['view','id'=>$id]);
     }
 
     /**

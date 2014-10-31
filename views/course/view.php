@@ -25,7 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
     <?php endif; ?> 
-    <?= DetailView::widget([
+    <?= Html::encode($model->description); ?>
+    <?php 
+    /*echo DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
@@ -35,6 +37,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'is_available',
             'description:ntext',
         ],
-    ]) ?>
-
+    ])*/ 
+    ?><br><br>
+    <center>
+    <?php if (!$joined): ?>
+    <?= Html::a('ikuti kuliah ini',['/course/join','id'=>$model->id],['class'=>'btn btn-primary']); ?>
+    <?php else: ?>
+    <?= Html::a('keluar dari kuliah ini',['/course/quit','id'=>$model->id],['class'=>'btn btn-danger','data'=>['confirm'=>'Apa anda yakin ingin keluar dari kuliah ini?']]); ?>
+    <?php endif; ?>
+    </center>
 </div>

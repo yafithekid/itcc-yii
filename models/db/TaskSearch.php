@@ -61,4 +61,36 @@ class TaskSearch extends Task
 
         return $dataProvider;
     }
+
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchStudentTasks($params)
+    {
+        $query = Task::find()->joinWith(['userCourse'=>function($query){
+            $query->andWhere(['user_id' => Yii::$app->user->identity->id]);
+        }])->where('`deadline` > CURRENT_TIMESTAMP')->orderBy(['deadline' => SORT_DESC]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        if (!($this->load($params) && $this->validate())) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'course_id' => $this->course_id,
+            'id' => $this->id,
+            'created_at' => $this->created_at,
+            'deadline' => $this->deadline,
+            'user_id' => $this->user_id,
+        ]);
+
+        return $dataProvider;
+    }
 }

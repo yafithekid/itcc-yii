@@ -60,7 +60,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getSubmissions()
     {
-        return $this->hasMany(Submissions::className(), ['task_id' => 'id']);
+        return $this->hasMany(Submission::className(), ['task_id' => 'id']);
     }
 
     /**
@@ -68,7 +68,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getCourse()
     {
-        return $this->hasOne(Courses::className(), ['id' => 'course_id']);
+        return $this->hasOne(Course::className(), ['id' => 'course_id']);
     }
 
     /**
@@ -76,6 +76,6 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }
