@@ -51,6 +51,6 @@ class Faculty extends \yii\db\ActiveRecord
      */
     public function getDepartments()
     {
-        return $this->hasMany(Departments::className(), ['faculty_id' => 'id']);
+        return $this->hasMany(Department::className(), ['faculty_id' => 'id']);
     }
 }

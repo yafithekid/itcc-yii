@@ -1,16 +1,16 @@
 <?php
 
-namespace app\models\search;
+namespace app\models\db;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\db\Faculty as FacultyModel;
+use app\models\db\Task;
 
 /**
- * Faculty represents the model behind the search form about `app\models\db\Faculty`.
+ * TaskSearch represents the model behind the search form about `app\models\db\Task`.
  */
-class Faculty extends FacultyModel
+class TaskSearch extends Task
 {
     /**
      * @inheritdoc
@@ -18,7 +18,8 @@ class Faculty extends FacultyModel
     public function rules()
     {
         return [
-            [['id', 'name'], 'safe'],
+            [['course_id', 'id', 'user_id'], 'integer'],
+            [['created_at', 'deadline'], 'safe'],
         ];
     }
 
@@ -40,7 +41,7 @@ class Faculty extends FacultyModel
      */
     public function search($params)
     {
-        $query = FacultyModel::find();
+        $query = Task::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -50,11 +51,14 @@ class Faculty extends FacultyModel
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere([
+            'course_id' => $this->course_id,
+            'id' => $this->id,
+            'created_at' => $this->created_at,
+            'deadline' => $this->deadline,
+            'user_id' => $this->user_id,
+        ]);
 
         return $dataProvider;
     }
-
-    
 }

@@ -3,23 +3,20 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\db\Department;
-use app\models\db\Faculty;
+use app\models\db\Task;
+use app\models\db\TaskSearch;
 use app\models\db\Course;
 
-use yii\filters\AccessControl;
-use app\models\search\Department as DepartmentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * DepartmentController implements the CRUD actions for Department model.
+ * TaskController implements the CRUD actions for Task model.
  */
-class DepartmentController extends Controller
+class TaskController extends Controller
 {
     public $layout = '@app/views/layouts/sidebar';
-
     public function behaviors()
     {
         return [
@@ -29,99 +26,100 @@ class DepartmentController extends Controller
                     'delete' => ['post'],
                 ],
             ],
-            'login' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function($rule,$action){
-                            if (isset(Yii::$app->user->identity))
-                                return Yii::$app->user->identity->isAdmin();
-                            else
-                                return false;
-                        }
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['view'],
-                        'roles' => ['@','?'],
-                    ],
-                ],
-            ]
         ];
     }
 
     /**
-     * Lists all Department models.
+     * Lists all Task models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionTeacher()
     {
-        $searchModel = new DepartmentSearch();
+        $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render('teacher', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Department model.
-     * @param string $id
+     * Lists all Task models.
+     * @return mixed
+     */
+    public function actionStudent()
+    {
+        $searchModel = new TaskSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('student', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays a single Task model.
+     * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => Department::find()->with('courses')->where(['id'=>$id])->one(),
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Department model.
+     * Creates a new Task model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Department();
+        $model = new Task();
+        $model->user_id = Yii::$app->user->identity->id;
+
+        $courses = Course::find()->with(['userCourses'])->where(['userCourses.user_id'=>Yii::$app->user->identity->id]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'faculties' => Faculty::find()->all(),
+                'courses' => $courses,
             ]);
         }
     }
 
     /**
-     * Updates an existing Department model.
+     * Updates an existing Task model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->user_id = Yii::$app->user->identity->id;
+
+        $courses = Course::find()->with(['userCourses'])->where(['userCourses.user_id'=>Yii::$app->user->identity->id]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'faculties' => Faculty::find()->all(),
+                'courses' => $courses,
             ]);
         }
     }
 
     /**
-     * Deletes an existing Department model.
+     * Deletes an existing Task model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
@@ -132,15 +130,15 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Finds the Department model based on its primary key value.
+     * Finds the Task model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Department the loaded model
+     * @param integer $id
+     * @return Task the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Department::findOne($id)) !== null) {
+        if (($model = Task::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

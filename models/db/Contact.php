@@ -53,15 +53,15 @@ class Contact extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getContactUser()
+    public function getContactUsers()
     {
-        return $this->hasOne(Users::className(), ['id' => 'contact_user_id']);
+        return $this->hasMany(User::className(), ['contact_user_id' => 'id']);
     }
 
     /**

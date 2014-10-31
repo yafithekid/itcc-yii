@@ -30,7 +30,7 @@ class Message extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'contact_id', 'content'], 'required'],
+            [['contact_id', 'content'], 'required'],
             [['id', 'contact_id'], 'integer'],
             [['content'], 'string'],
             [['created_at'], 'safe']
@@ -55,6 +55,7 @@ class Message extends \yii\db\ActiveRecord
      */
     public function getContact()
     {
-        return $this->hasOne(Contacts::className(), ['id' => 'contact_id']);
+        return $this->hasOne(Contact::className(), ['id' => 'contact_id']);
     }
+
 }

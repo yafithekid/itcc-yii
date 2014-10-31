@@ -50,11 +50,11 @@ class Course extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'department_id' => 'Department ID',
+            'name' => 'Nama',
+            'department_id' => 'Jurusan',
             'semester' => 'Semester',
-            'is_available' => 'Is Available',
-            'description' => 'Description',
+            'is_available' => 'Buka',
+            'description' => 'Deskripsi',
         ];
     }
 
