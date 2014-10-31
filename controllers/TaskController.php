@@ -6,10 +6,13 @@ use Yii;
 use app\models\db\Task;
 use app\models\db\TaskSearch;
 use app\models\db\Course;
+use app\models\db\Submission;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use yii\web\UploadedFile;
 
 /**
  * TaskController implements the CRUD actions for Task model.
@@ -66,8 +69,21 @@ class TaskController extends Controller
      */
     public function actionView($id)
     {
+        $submission = new Submission();
+
+        if ($submission->load(Yii::$app->request->post()) && $submission->save() ) {
+
+            $submission->_file = UploadedFile::getInstance($submission,'_file');
+
+            $submission->_file->saveAs('uploads/submissions/'.sha1($submission->id).'.'.$submission->_file->extension);
+            $submission->pathfile = 'uploads/submissions/'.sha1($submission->id).'.'.$submission->_file->extension;
+            $submission->save();
+        }
+        $submission->task_id = $id;
+        $submission->user_id = Yii::$app->user->identity->id;
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'submission' => $submission,
         ]);
     }
 
@@ -81,7 +97,9 @@ class TaskController extends Controller
         $model = new Task();
         $model->user_id = Yii::$app->user->identity->id;
 
-        $courses = Course::find()->with(['userCourses'])->where(['userCourses.user_id'=>Yii::$app->user->identity->id]);
+        $courses = Course::find()
+        ->joinWith(['userCourses'=>function($query){$query->andWhere(['user_id' => Yii::$app->user->identity->id]);}])
+        ->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -104,8 +122,10 @@ class TaskController extends Controller
         $model = $this->findModel($id);
         $model->user_id = Yii::$app->user->identity->id;
 
-        $courses = Course::find()->with(['userCourses'])->where(['userCourses.user_id'=>Yii::$app->user->identity->id]);
-
+        $courses = Course::find()
+        ->joinWith(['userCourses'=>function($query){$query->andWhere(['user_id' => Yii::$app->user->identity->id]);}])
+        ->all();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

@@ -18,6 +18,7 @@ use Yii;
  */
 class Submission extends \yii\db\ActiveRecord
 {
+    public $_file;
     /**
      * @inheritdoc
      */
@@ -32,8 +33,9 @@ class Submission extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'task_id', 'user_id', 'pathfile'], 'required'],
+            [['task_id', 'user_id'], 'required'],
             [['id', 'task_id', 'user_id'], 'integer'],
+            [['_file'],'file'],
             [['created_at'], 'safe'],
             [['pathfile'], 'string', 'max' => 500]
         ];

@@ -63,7 +63,7 @@ class Course extends \yii\db\ActiveRecord
      */
     public function getDepartment()
     {
-        return $this->hasOne(Departments::className(), ['id' => 'department_id']);
+        return $this->hasOne(Department::className(), ['id' => 'department_id']);
     }
 
     /**
@@ -71,7 +71,7 @@ class Course extends \yii\db\ActiveRecord
      */
     public function getTasks()
     {
-        return $this->hasMany(Tasks::className(), ['course_id' => 'id']);
+        return $this->hasMany(Task::className(), ['course_id' => 'id']);
     }
 
     /**
@@ -79,7 +79,7 @@ class Course extends \yii\db\ActiveRecord
      */
     public function getUserCourses()
     {
-        return $this->hasMany(UserCourses::className(), ['course_id' => 'id']);
+        return $this->hasMany(UserCourse::className(), ['course_id' => 'id']);
     }
 
     /**
@@ -87,6 +87,6 @@ class Course extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasMany(Users::className(), ['id' => 'user_id'])->viaTable('user_courses', ['course_id' => 'id']);
+        return $this->hasMany(User::className(), ['id' => 'user_id'])->viaTable('user_courses', ['course_id' => 'id']);
     }
 }

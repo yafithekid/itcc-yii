@@ -5,12 +5,12 @@ namespace app\models\db;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\db\Task;
+use app\models\db\UserCourse;
 
 /**
- * TaskSearch represents the model behind the search form about `app\models\db\Task`.
+ * UserCourseSearch represents the model behind the search form about `app\models\db\UserCourse`.
  */
-class TaskSearch extends Task
+class UserCourseSearch extends UserCourse
 {
     /**
      * @inheritdoc
@@ -18,8 +18,7 @@ class TaskSearch extends Task
     public function rules()
     {
         return [
-            [['course_id', 'id', 'user_id'], 'integer'],
-            [['created_at', 'deadline'], 'safe'],
+            [['user_id', 'course_id', 'grade'], 'integer'],
         ];
     }
 
@@ -41,7 +40,7 @@ class TaskSearch extends Task
      */
     public function search($params)
     {
-        $query = Task::find();
+        $query = UserCourse::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,11 +51,9 @@ class TaskSearch extends Task
         }
 
         $query->andFilterWhere([
-            'course_id' => $this->course_id,
-            'id' => $this->id,
-            'created_at' => $this->created_at,
-            'deadline' => $this->deadline,
             'user_id' => $this->user_id,
+            'course_id' => $this->course_id,
+            'grade' => $this->grade,
         ]);
 
         return $dataProvider;
@@ -69,26 +66,24 @@ class TaskSearch extends Task
      *
      * @return ActiveDataProvider
      */
-    public function searchStudentTasks($params)
+    public function searchDosenKuliah($params)
     {
-        $query = Task::find()->joinWith(['userCourse'=>function($query){
-            $query->andWhere(['user_id' => Yii::$app->user->identity->id]);
-        }])->where('`deadline` > CURRENT_TIMESTAMP')->orderBy(['deadline' => SORT_DESC]);
+        $data_query = UserCourse::find()->joinWith(['user'=>function($query){
+            $query->andWhere('is_teacher = 1');
+        }]);
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $data_query,
         ]);
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'course_id' => $this->course_id,
-            'id' => $this->id,
-            'created_at' => $this->created_at,
-            'deadline' => $this->deadline,
+        $data_query->andFilterWhere([
             'user_id' => $this->user_id,
+            'course_id' => $this->course_id,
+            'grade' => $this->grade,
         ]);
 
         return $dataProvider;

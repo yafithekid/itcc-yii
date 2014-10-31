@@ -59,11 +59,14 @@ class MessageForm extends Model
             'user_id' => $this->sender_user_id,
             'contact_user_id' => $user_contact->id
         ])->one();
+
         if ($contact === null){
             $contact = new Contact;
             $contact->user_id = $this->sender_user_id;
             $contact->contact_user_id = $user_contact->id;
             $contact->save();
+        
+            
         }
         if ($contact !== null){
             $message = new Message;
@@ -71,9 +74,6 @@ class MessageForm extends Model
             $message->content = $this->content;
             if ($message->save()){
                 return true;
-            } else {
-                var_dump($message->getErrors());
-                exit();
             }
         }
         return false;

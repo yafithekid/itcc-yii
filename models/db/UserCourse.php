@@ -52,7 +52,7 @@ class UserCourse extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     /**
@@ -60,6 +60,6 @@ class UserCourse extends \yii\db\ActiveRecord
      */
     public function getCourse()
     {
-        return $this->hasOne(Courses::className(), ['id' => 'course_id']);
+        return $this->hasOne(Course::className(), ['id' => 'course_id']);
     }
 }

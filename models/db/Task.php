@@ -33,10 +33,10 @@ class Task extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['course_id', 'id', 'user_id','title'], 'required'],
+            [['course_id', 'user_id','title'], 'required'],
             [['course_id', 'id', 'user_id'], 'integer'],
             [['created_at', 'deadline'], 'safe'],
-            [['title'],'string']
+            [['title','description'],'string']
         ];
     }
 
@@ -60,7 +60,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getSubmissions()
     {
-        return $this->hasMany(Submissions::className(), ['task_id' => 'id']);
+        return $this->hasMany(Submission::className(), ['task_id' => 'id']);
     }
 
     /**
@@ -68,7 +68,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getCourse()
     {
-        return $this->hasOne(Courses::className(), ['id' => 'course_id']);
+        return $this->hasOne(Course::className(), ['id' => 'course_id']);
     }
 
     /**
@@ -76,6 +76,6 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }
