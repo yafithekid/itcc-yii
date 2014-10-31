@@ -17,6 +17,7 @@ $last_login_users = User::find()->where(['is_online'=>0])->orderBy(['last_login'
             'items' => [
                 ['label' => 'Inbox', 'url' => ['/message/inbox']],
                 ['label' => 'Sent', 'url' => ['/message/sent']],
+                ['label' => 'Contact','url'=>['/message/contact']],
             ],
         ]);
     ?>

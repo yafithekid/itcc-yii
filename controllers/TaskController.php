@@ -7,12 +7,16 @@ use app\models\db\Task;
 use app\models\db\TaskSearch;
 use app\models\db\Course;
 use app\models\db\Submission;
+use app\models\db\SubmissionSearch;
+
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 use yii\web\UploadedFile;
+
+
 
 /**
  * TaskController implements the CRUD actions for Task model.
@@ -32,6 +36,14 @@ class TaskController extends Controller
         ];
     }
 
+    public function actionIndex(){
+        if (Yii::$app->user->identity->isTeacher() || Yii::$app->user->identity->isAdmin()){
+            $this->redirect(['teacher']);
+        } else {
+            $this->redirect(['student']);
+        }
+    }
+
     /**
      * Lists all Task models.
      * @return mixed
@@ -39,7 +51,7 @@ class TaskController extends Controller
     public function actionTeacher()
     {
         $searchModel = new TaskSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchTeacherTasks(Yii::$app->request->queryParams);
 
         return $this->render('teacher', [
             'searchModel' => $searchModel,
@@ -54,7 +66,7 @@ class TaskController extends Controller
     public function actionStudent()
     {
         $searchModel = new TaskSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchStudentTasks(Yii::$app->request->queryParams);
 
         return $this->render('student', [
             'searchModel' => $searchModel,
@@ -79,11 +91,13 @@ class TaskController extends Controller
             $submission->pathfile = 'uploads/submissions/'.sha1($submission->id).'.'.$submission->_file->extension;
             $submission->save();
         }
+
         $submission->task_id = $id;
         $submission->user_id = Yii::$app->user->identity->id;
         return $this->render('view', [
             'model' => $this->findModel($id),
             'submission' => $submission,
+            'submissionDataProvider' => (new SubmissionSearch)->searchUserSubmissions(Yii::$app->request->queryParams),
         ]);
     }
 

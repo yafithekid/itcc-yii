@@ -40,7 +40,35 @@ class ContactSearch extends Contact
      */
     public function search($params)
     {
-        $query = Contact::find()->with('contactUsers');
+        $query = Contact::find()->with('contactUser');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        if (!($this->load($params) && $this->validate())) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'user_id' => $this->user_id,
+            'contact_user_id' => $this->contact_user_id,
+        ]);
+
+        return $dataProvider;
+    }
+
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchCurrentUser($params)
+    {
+        $query = Contact::find()->where(['user_id' => Yii::$app->user->identity->id])->with('contactUser');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

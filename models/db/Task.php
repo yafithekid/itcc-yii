@@ -78,4 +78,8 @@ class Task extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
+
+    public function getStudentCourse(){
+        return $this->hasMany(UserCourse::className(),['course_id'=> 'course_id']);
+    }
 }

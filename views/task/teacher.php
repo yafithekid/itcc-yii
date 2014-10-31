@@ -18,9 +18,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Buat Tugas', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <?= ListView::widget([
-        'dataProvider' => $dataProvider,
-       // 'filterModel' => $searchModel,
-    ]); ?>
+    <?=
+    GridView::widget([
+       'dataProvider' => $dataProvider,
+       'columns' => [
+       	'course.name',
+       	'title',
+       	'deadline',
+       	['class' => 'yii\grid\ActionColumn'],
+       ]
+    ]);
+    ?>
 
 </div>

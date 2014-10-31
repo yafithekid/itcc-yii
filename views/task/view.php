@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\db\Task */
@@ -39,5 +40,24 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
     <?=  Html::encode($model->description); ?>
+    </p>
+    <h4>Pengumpulan Anda</h4>
+    <p>
+    <table class='table table-striped table-condensed'>
+    <tr>
+        <th>No</th><th>Dikumpul</th><th>Download</th>   
+    </tr>
+    <?= ListView::widget([
+        'dataProvider' => $submissionDataProvider,
+        'itemOptions' => ['class' => 'item'],
+        'itemView' => function ($model, $key, $index, $widget) {
+            return "<tr>".
+            "<td>".($index + 1)."</td>".
+            "<td>".$model->created_at."</td>".
+            "<td>".Html::a("<span class='glyphicon glyphicon-download-alt'></span>",Yii::$app->request->baseUrl."/".$model->pathfile)."</td>".
+            "</tr>";
+        },
+    ]) ?>
+    </table>
     </p>
 </div>

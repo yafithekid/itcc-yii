@@ -6,6 +6,9 @@ use Yii;
 use app\models\db\Message;
 use app\models\form\MessageForm;
 use app\models\db\MessageSearch;
+use app\models\db\ContactSearch;
+use app\models\form\UserContactForm;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -85,6 +88,26 @@ public $layout = '@app/views/layouts/message';
         return $this->render('create', [
                 'model' => $model,
             ]);
+    }
+
+    public function actionContact()
+    {
+        $contact = new UserContactForm;
+        if ($contact->load(Yii::$app->request->post())) {
+            $contact->save();
+        }
+        $searchModel = new ContactSearch;
+        $dataProvider = $searchModel->searchCurrentUser(Yii::$app->request->queryParams);
+
+        return $this->render('contact',[
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'newContact' => $contact,
+        ]);
+    }
+
+    public function actionAddcontact(){
+        
     }
 
 
