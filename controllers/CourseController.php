@@ -88,13 +88,19 @@ class CourseController extends Controller
      */
     public function actionView($id)
     {
-        $user_course = UserCourse::find()
-        ->where(['user_id' => Yii::$app->user->identity->id,'course_id' => $id])
-        ->one();
+        if (Yii::$app->user->isGuest){
+            $joined = false;
+        } else {
+            $user_course = UserCourse::find()
+            ->where(['user_id' => Yii::$app->user->identity->id,'course_id' => $id])
+            ->one();
+            $joined = ($user_course !== null);
+        }
+        
 
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'joined' => ($user_course !== null)
+            'joined' => $joined
         ]);
     }
 

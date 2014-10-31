@@ -40,10 +40,12 @@ $this->params['breadcrumbs'][] = $this->title;
     ])*/ 
     ?><br><br>
     <center>
-    <?php if (!$joined): ?>
-    <?= Html::a('ikuti kuliah ini',['/course/join','id'=>$model->id],['class'=>'btn btn-primary']); ?>
-    <?php else: ?>
-    <?= Html::a('keluar dari kuliah ini',['/course/quit','id'=>$model->id],['class'=>'btn btn-danger','data'=>['confirm'=>'Apa anda yakin ingin keluar dari kuliah ini?']]); ?>
+    <?php if (!Yii::$app->user->isGuest): ?>
+        <?php if (!$joined): ?>
+        <?= Html::a('ikuti kuliah ini',['/course/join','id'=>$model->id],['class'=>'btn btn-primary']); ?>
+        <?php else: ?>
+        <?= Html::a('keluar dari kuliah ini',['/course/quit','id'=>$model->id],['class'=>'btn btn-danger','data'=>['confirm'=>'Apa anda yakin ingin keluar dari kuliah ini?']]); ?>
+        <?php endif; ?>
     <?php endif; ?>
     </center>
 </div>
