@@ -16,16 +16,11 @@ use yii\filters\VerbFilter;
 class MessageController extends Controller
 {
 
-public $layout = '@app/views/layouts/sidebar';
+public $layout = '@app/views/layouts/message';
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
+
         ];
     }
 
@@ -33,13 +28,28 @@ public $layout = '@app/views/layouts/sidebar';
      * Lists all Message models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionInbox()
     {
         $searchModel = new MessageSearch();
-        $dataProvider = $searchModel->searchCurrentUser(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchInbox(Yii::$app->request->queryParams);
 
         
-        return $this->render('index', [
+        return $this->render('inbox', [
+            'searchModel' => $searchModel,
+             'dataProvider' => $dataProvider,
+            //'messages' => $messages,
+        ]);
+    }
+
+    /**
+     * Lists all Message models.
+     * @return mixed
+     */
+    public function actionSent()
+    {
+        $searchModel = new MessageSearch();
+        $dataProvider = $searchModel->searchSent(Yii::$app->request->queryParams);
+        return $this->render('sent', [
             'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
             //'messages' => $messages,
@@ -67,9 +77,8 @@ public $layout = '@app/views/layouts/sidebar';
     {
         $model = new MessageForm();
         if ($model->load(Yii::$app->request->post())) {
-            var_dump($model->attributes);
             if ($model->contact()){
-                return $this->redirect(['index']);
+                return $this->redirect(['sent']);
             }
             
         }
@@ -78,37 +87,6 @@ public $layout = '@app/views/layouts/sidebar';
             ]);
     }
 
-    /**
-     * Updates an existing Message model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Message model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the Message model based on its primary key value.

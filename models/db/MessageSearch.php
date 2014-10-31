@@ -69,10 +69,42 @@ class MessageSearch extends Message
      *
      * @return ActiveDataProvider
      */
-    public function searchCurrentUser($params)
+    public function searchSent($params)
     {
-        $query = Message::find()->with(['contact' => function($query2){
-            $query2->andWhere(['user_id' => Yii::$app->user->identity->id]);
+        $query = Message::find()->with(['contact' => function($query){
+            $query->andWhere(['user_id' => Yii::$app->user->identity->id]);
+        }]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        if (!($this->load($params) && $this->validate())) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'contact_id' => $this->contact_id,
+            'created_at' => $this->created_at,
+        ]);
+
+        $query->andFilterWhere(['like', 'content', $this->content]);
+
+        return $dataProvider;
+    }
+
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchInbox($params)
+    {
+        $query = Message::find()->with(['contact' => function($query){
+            $query->andWhere(['contact_user_id' => Yii::$app->user->identity->id]);
         }]);
 
         $dataProvider = new ActiveDataProvider([
