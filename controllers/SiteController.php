@@ -8,6 +8,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\form\LoginForm;
 use app\models\form\ContactForm;
+use app\models\db\User;
+
 
 class SiteController extends Controller
 {
@@ -96,6 +98,15 @@ class SiteController extends Controller
             return $this->render('contact', [
                 'model' => $model,
             ]);
+        }
+    }
+
+    public function actionRegister(){
+        $model = new User;
+        if ($model->load(Yii::$app->request->post()) && $model->save()){
+            return $this->render('register-success');
+        } else {
+            return $this->render('register',['model'=>$model]);
         }
     }
 

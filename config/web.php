@@ -11,6 +11,17 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '03qf4-EGEqoIzXPt7c3_mgxTpJoH9Nl9',
         ],
+        
+        // 'assetManager' => [
+        //     'bundles' => [
+        //         'yii\bootstrap\BootstrapAsset' => [
+        //             'basePath' => '@web',
+        //             'baseUrl' => ''
+        //             'css' => ['css/bootstrap.css'],
+        //         ],
+        //     ],
+
+        // ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
