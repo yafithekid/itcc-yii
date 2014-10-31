@@ -15,7 +15,7 @@ $last_login_users = User::find()->where(['is_online'=>0])->orderBy(['last_login'
         <div class="col-md-3 sidebar">
             <div id="accordion">
             <?php if (isset(Yii::$app->user->identity)):?>
-            <?= '<h5>Menu Mahasiswa</h5>'; ?>
+            <?= '<h5><a href=#>Menu Mahasiswa</a></h5>'; ?>
             <?= Nav::widget([
                     'options' => ['class' => 'nav nav-sidebar'],
                     'items' => [

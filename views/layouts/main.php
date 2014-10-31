@@ -26,11 +26,13 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'Kuliah Super',
+                'brandLabel' => '<img src='.Yii::$app->request->baseUrl.'/img/logo.png height="35px">',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
+                    'encodeLabel' => false,
                 ],
+
             ]);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
@@ -57,7 +59,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-            <p class="pull-left">&copy; Kuliah Super <?= date('Y') ?></p>
+            <p class="pull-left">&copy; Kuliah Kita <?= date('Y') ?></p>
         </div>
     </footer>
 
