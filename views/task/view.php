@@ -6,15 +6,18 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\db\Task */
 
-$this->title = $model->id;
+$this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="task-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+    <div style='text-align:center'>
+    <h1 ><?= Html::encode($this->title) ?></h1>
+    <?= "Deadline: $model->deadline "; ?>
+    </div>
+    <br>
     <p>
+    <?php if (Yii::$app->user->identity->isTeacher()): ?>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -23,17 +26,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+    <?php endif; ?>
     </p>
+    <p>
+    
+    </p><br>
+    <?php if (time() < strtotime($model->deadline)) :?>
+        <p>
+        <?= $this->render('_uploader',['model'=>$submission]);?>
+        </p>
+    <?php endif; ?>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'course_id',
-            'id',
-            'created_at',
-            'deadline',
-            'user_id',
-        ],
-    ]) ?>
-
+    <p>
+    <?=  Html::encode($model->description); ?>
+    </p>
 </div>
